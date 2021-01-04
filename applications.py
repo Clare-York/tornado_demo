@@ -5,7 +5,7 @@
 @File        : applications.py
 @introduce   :一些基础设定,一个是html等页面模版的存放位置,一个是css等静态文件的存放位置
 """
-from config.routes import url
+from config.routes import urls
 import tornado.web
 import os
 from config.settings import *
@@ -21,6 +21,6 @@ settings = {
 }
 # handlers指的是url中的内容
 application = tornado.web.Application(
-    handlers=url,
+    handlers=urls,
     **settings
 )

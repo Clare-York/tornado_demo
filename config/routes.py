@@ -3,18 +3,14 @@
 @Time        : 2021/1/4 9:53
 @Author      : chengyao
 @File        : routes.py
-@introduce   :
+@introduce   : 路由文件
 """
-# 找到对应的handler位置，并import
-
 from handlers.MainHandlers import MainHandler
-from handlers.ArticleHandlers import ArticleHandler
+from handlers.TestHandlers import TestHandler
 
-# 存入到列表中，后续注册到server端，告诉server端不同地址，
-# 应该找不同的handler，其中“/”代表的是根网站，例如：x.x.com.
-# 若“/app”，则访问x.x.com/app可以访问对应的资源
-url = [
+# 将路由存入到列表中，后续注册对应视图到server端，告诉server端不同地址，
+urls = [
     (r"/", MainHandler),  # 根路由
-    (r"/a", ArticleHandler),
+    (r"/test", TestHandler),  # 测试
 
 ]
