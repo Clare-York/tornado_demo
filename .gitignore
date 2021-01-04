@@ -1,0 +1,5 @@
+##ignore this files##
+.idea
+article
+venv
+config/settings.py
