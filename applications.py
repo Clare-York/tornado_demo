@@ -3,7 +3,7 @@
 @Time        : 2021/1/4 9:52
 @Author      : chengyao
 @File        : applications.py
-@introduce   :一些基础设定,一个是html等页面模版的存放位置,一个是css等静态文件的存放位置
+@introduce   :一些基础设定
 """
 from config.routes import urls
 import tornado.web
@@ -19,7 +19,7 @@ settings = {
     "static_hash_cache": False,  # 关闭静态文件缓存
     "serve_traceback": True  # 当一个异常在 RequestHandler 中没有捕获，将会生成一个包含调用栈信息的错误页
 }
-# handlers指的是url中的内容
+# handlers指的是routes.py中的内容
 application = tornado.web.Application(
     handlers=urls,
     **settings
