@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
 @Time        : 2021/1/4 9:53
-@Author      : chengyao
+@Author      : chengy_work@foxmail.com
 @File        : routes.py
-@introduce   : 路由文件
+@Introduce   : 路由文件
 """
 from Handlers.MainHandlers import MainHandler
 from Handlers.TestHandlers import TestHandler

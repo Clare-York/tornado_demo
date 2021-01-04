@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
 @Time        : 2021/1/4 13:00
-@Author      : chengyao
+@Author      : chengy_work@foxmail.com
 @File        : settings_template.py
-@introduce   : 配置文件模板，使用时需将文件重命名为settings.py,并填入对应内容
+@Introduce   : 配置文件模板，使用时需将文件重命名为settings.py,并填入对应内容
 """
 DEBUG = False
 

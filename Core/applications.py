@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
 @Time        : 2021/1/4 9:52
-@Author      : chengyao
+@Author      : chengy_work@foxmail.com
 @File        : applications.py
-@introduce   :一些基础设定
+@Introduce   : 一些基础设定
 """
 from Config.routes import urls
 import tornado.web

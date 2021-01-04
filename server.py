@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
 @Time        : 2021/1/4 9:50
-@Author      : chengyao
+@Author      : chengy_work@foxmail.com
 @File        : server.py
-@introduce   : tornado服务主程序
+@Introduce   : tornado服务主程序
 """
 import tornado.ioloop
 import tornado.httpserver

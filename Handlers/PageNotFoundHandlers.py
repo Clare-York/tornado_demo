@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
 @Time        : 2021/1/4 14:16
-@Author      : chengyao
+@Author      : chengy_work@foxmail.com
 @File        : PageNotFoundHandlers.py
-@introduce   :
+@Introduce   : 自定义404处理
 """
 from abc import ABC
 
