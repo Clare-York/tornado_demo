@@ -6,6 +6,7 @@
 @Introduce   : 测试用
 """
 from abc import ABC
+from Config.log import logger, errlogger
 import tornado.web
 import json
 import base64
@@ -21,6 +22,9 @@ class TestHandler(tornado.web.RequestHandler, ABC):
         处理get请求
         :return:
         """
+        logger.debug("Remote_IP: %s" % self.request.remote_ip)
+        logger.debug("Method: %s" % self.request.method)
+
         self.write("Headers: %s" % self.request.headers)  # 请求头
 
         self.write("<p></p>")
@@ -89,11 +93,15 @@ class TestHandler(tornado.web.RequestHandler, ABC):
         :return:
         """
         # 获取参数
+        logger.debug("Remote_IP: %s" % self.request.remote_ip)
+        logger.debug("Method: %s" % self.request.method)
         try:
             parameter_a = self.get_argument("a")
         except tornado.web.MissingArgumentError:
+            errlogger.debug("Remote_IP: %s" % self.request.remote_ip)
+            errlogger.debug("Method: %s" % self.request.method)
+            errlogger.error("获取参数'a'失败！")
             # raise tornado.web.HTTPError(400)
-            print("获取参数'a'失败！")
         else:
             print("a:", parameter_a)
 
@@ -104,11 +112,17 @@ class TestHandler(tornado.web.RequestHandler, ABC):
             filebody = file_data["body"]  # 文件主体
             fileext = file_data["content_type"]  # 文件类型
         except KeyError:
+            errlogger.debug("Remote_IP: %s" % self.request.remote_ip)
+            errlogger.debug("Method: %s" % self.request.method)
+            errlogger.error("获取参数失败")
             # raise tornado.web.HTTPError(401)
-            print('获取参数失败')
+            # print("获取参数失败")
         except Exception as e:
+            errlogger.debug("Remote_IP: %s" % self.request.remote_ip)
+            errlogger.debug("Method: %s" % self.request.method)
+            errlogger.error(e)
             # raise tornado.web.HTTPError(400)
-            print(e)
+            # print(e)
         else:
             if fileext.split('/')[0] == "image":  # 以图片为例
                 f = open(filename, "wb")
@@ -117,24 +131,28 @@ class TestHandler(tornado.web.RequestHandler, ABC):
 
         # 获取上传的文件-多文件
         try:
-            fileExt = None
-            fileName = None
-            fileBody = None
-            file_Data = self.request.files["file"][0]
-            for file in file_Data:
-                fileName = file["filename"]
-                fileBody = file["body"]
-                fileExt = file["content_type"]
+            file_ext = None
+            file_name = None
+            file_body = None
+            file_data = self.request.files["file"][0]
+            for file in file_data:
+                file_name = file["filename"]
+                file_body = file["body"]
+                file_ext = file["content_type"]
         except KeyError:
+            errlogger.debug("Remote_IP: %s" % self.request.remote_ip)
+            errlogger.debug("Method: %s" % self.request.method)
+            errlogger.error("获取参数失败")
             # raise tornado.web.HTTPError(401)
-            print('获取参数失败')
         except Exception as e:
-            print(e)
+            errlogger.debug("Remote_IP: %s" % self.request.remote_ip)
+            errlogger.debug("Method: %s" % self.request.method)
+            errlogger.error(e)
             # raise tornado.web.HTTPError(400)
         else:
-            if fileExt.split('/')[0] == "image":  # 以图片为例
-                file = open(fileName, 'wb')
-                file.write(fileBody)
+            if file_ext.split('/')[0] == "image":  # 以图片为例
+                file = open(file_name, 'wb')
+                file.write(file_body)
                 file.close()
 
         # 获取上传的图片-base64
@@ -142,9 +160,13 @@ class TestHandler(tornado.web.RequestHandler, ABC):
             image_data = base64.b64decode(self.get_argument("image"))
         except KeyError:
             # raise tornado.web.HTTPError(401)
-            print('获取参数失败')
+            errlogger.debug("Remote_IP: %s" % self.request.remote_ip)
+            errlogger.debug("Method: %s" % self.request.method)
+            errlogger.error("获取参数失败")
         except Exception as e:
-            print(e)
+            errlogger.debug("Remote_IP: %s" % self.request.remote_ip)
+            errlogger.debug("Method: %s" % self.request.method)
+            errlogger.error(e)
             # raise tornado.web.HTTPError(400)
         else:
             img = open("test.jpg", 'wb')
@@ -156,11 +178,19 @@ class TestHandler(tornado.web.RequestHandler, ABC):
             data = json.loads(self.request.body)
             parameter_a = data["a"]
         except json.decoder.JSONDecodeError:  # 不是json数据
-            print("不是Json数据")
+            errlogger.debug("Remote_IP: %s" % self.request.remote_ip)
+            errlogger.debug("Method: %s" % self.request.method)
+            errlogger.error("不是Json数据")
             # raise tornado.web.HTTPError(403)
         except KeyError:  # 没有找到key
-            print('获取参数失败')
+            errlogger.debug("Remote_IP: %s" % self.request.remote_ip)
+            errlogger.debug("Method: %s" % self.request.method)
+            errlogger.error("获取参数失败")
             # raise tornado.web.HTTPError(405)
+        except Exception as e:
+            errlogger.debug("Remote_IP: %s" % self.request.remote_ip)
+            errlogger.debug("Method: %s" % self.request.method)
+            errlogger.error(e)
         else:
             print("a:", parameter_a)
 

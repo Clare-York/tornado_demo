@@ -2,13 +2,13 @@
 """
 @Time        : 2021/1/4 9:52
 @Author      : chengy_work@foxmail.com
-@File        : applications.py
+@File        : Applications.py
 @Introduce   : 一些基础设定
 """
 from Config.routes import urls
 import tornado.web
 import os
-from Config.settings import *
+from Config.configs import *
 
 settings = {
     "template_path": os.path.join(os.getcwd(), "Templates"),
