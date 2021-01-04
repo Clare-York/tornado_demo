@@ -6,12 +6,11 @@
 @introduce   :
 """
 import tornado.ioloop
-import tornado.web
 import tornado.httpserver
 import tornado.options
-from applications import application
+from Core.applications import application
 import sys
-from config.settings import HOST, PORT
+from Config.settings import HOST, PORT
 
 # 定义一个变量，options.port = 8080。这样的好处是，
 # 如果之后需要在tornado其他地方使用这个变量，
