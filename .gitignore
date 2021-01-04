@@ -1,6 +1,0 @@
-##ignore this files##
-.idea
-.gitignore
-article
-venv
-config/settings.py
