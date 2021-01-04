@@ -27,8 +27,8 @@ if __name__ == "__main__":
 
     http_server.bind(tornado.options.options.port, address=HOST)  # 多进程启动http_server，windows下不可用
     # 指定开启几个进程，默认值为1；
-    # 如果参数值为None或者<=0，则自动根据机器硬件的cpu核芯数创建同等数目的子进程；如果参数值>0，则创建num_processes个子进程。
-    http_server.start(num_processes=0)
+    # 如果参数num_processes为None或<=0，则自动根据机器硬件的cpu核芯数创建同等数目的子进程；如果参数值>0，则创建num_processes个子进程。
+    http_server.start()
 
     lib = sys.path[0] + '\t' + HOST + '\t' + str(tornado.options.options.port)  # 为了打印现在server是来自哪个文件，以及在监听哪个端口
     print('Tornado server is running at %s' % lib)

@@ -11,8 +11,8 @@ import os
 from config.settings import *
 
 settings = {
-    "template_path": os.path.join(os.path.dirname(__file__), "templates"),
-    "static_path": os.path.join(os.path.dirname(__file__), "static"),
+    "template_path": os.path.join(os.getcwd(), "templates"),
+    "static_path": os.path.join(os.getcwd(), "static"),
     "debug": DEBUG,
     "autoreload": DEBUG,  # debug开启时自动重载应用
     "compiled_template_cache": False,  # 关闭模版缓存
