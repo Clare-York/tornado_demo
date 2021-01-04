@@ -5,14 +5,14 @@
 @File        : applications.py
 @introduce   :一些基础设定
 """
-from config.routes import urls
+from Config.routes import urls
 import tornado.web
 import os
-from config.settings import *
+from Config.settings import *
 
 settings = {
-    "template_path": os.path.join(os.getcwd(), "templates"),
-    "static_path": os.path.join(os.getcwd(), "static"),
+    "template_path": os.path.join(os.getcwd(), "Templates"),
+    "static_path": os.path.join(os.getcwd(), "Statics"),
     "debug": DEBUG,
     "autoreload": DEBUG,  # debug开启时自动重载应用
     "compiled_template_cache": False,  # 关闭模版缓存
