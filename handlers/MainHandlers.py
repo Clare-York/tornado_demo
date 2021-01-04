@@ -12,8 +12,9 @@ import tornado.web
 
 class MainHandler(tornado.web.RequestHandler, ABC):
     """
-    用get的方式访问这个handler的话，就进入到get方法。
-    这里没有写post的方法，如果用post的方法进入到这个handler会报错
+    根路由对应逻辑
+    用get方式访问，就进入到get方法。
+    write方法是字符串打印到浏览器页面。若返回模板html，需要用render
     """
 
     def get(self):
@@ -21,9 +22,7 @@ class MainHandler(tornado.web.RequestHandler, ABC):
         处理get请求
         :return:
         """
-        # write方法是字符串打印到浏览器页面。若返回模板html，需要用render
-        self.write(self.request.method)
-        self.write("Hello World")
+        self.render("index.html")
 
     def post(self):
         """
@@ -31,4 +30,7 @@ class MainHandler(tornado.web.RequestHandler, ABC):
         :return:
         """
         self.write(self.request.method)
+
+        self.write("<p></p>")
+
         self.write("Hello World")
