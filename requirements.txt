@@ -1,3 +1,6 @@
 tornado==6.1
 
 loguru~=0.5.3
+mysqlclient~=2.0.3
+DBUtils~=2.0
+redis~=3.5.3

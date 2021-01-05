@@ -3,7 +3,7 @@
 @Time        : 2021/1/4 14:16
 @Author      : chengy_work@foxmail.com
 @File        : PageNotFoundHandlers.py
-@Introduce   : 自定义404处理
+@Introduce   : 请求未定义路由时的自定义404处理
 """
 from abc import ABC
 from loguru import logger

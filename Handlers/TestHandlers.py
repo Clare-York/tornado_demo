@@ -10,12 +10,19 @@ from loguru import logger
 import tornado.web
 import json
 import base64
+from Core.RedisDriver import RedisDB
+from Core.MysqlDriver import Database
 
 
 class TestHandler(tornado.web.RequestHandler, ABC):
     """
     测试用
     """
+
+    def __init__(self, *args, **kwargs):
+        super(TestHandler, self).__init__(*args, **kwargs)
+        self.redis = RedisDB().redis
+        self.connect, self.cursor = Database().db
 
     def get(self):
         """
@@ -91,8 +98,9 @@ class TestHandler(tornado.web.RequestHandler, ABC):
         处理post请求
         :return:
         """
-        # 获取参数
         logger.debug("Remote_IP: %s,Method: %s" % (self.request.remote_ip, self.request.method))
+
+        # 获取参数
         try:
             parameter_a = self.get_argument("a")
         except tornado.web.MissingArgumentError:
@@ -197,7 +205,11 @@ class TestHandler(tornado.web.RequestHandler, ABC):
         处理put请求
         :return:
         """
-        pass
+        sql = "SELECT VERSION()"
+        redis_re = self.redis.get("name")
+        self.cursor.execute(sql)
+        mysql_re = self.cursor.fetchone()
+        self.write("redis: %s \t mysql: %s" % (redis_re, mysql_re))
 
     def delete(self):
         """
