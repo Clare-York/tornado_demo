@@ -8,8 +8,9 @@
 from Config.routes import urls
 import tornado.web
 import os
-from Config.configs import *
+from Config.settings import *
 
+log_name = "Runtime_{time:YYYY-MM-DD}.log"
 settings = {
     "template_path": os.path.join(os.getcwd(), "Templates"),
     "static_path": os.path.join(os.getcwd(), "Statics"),

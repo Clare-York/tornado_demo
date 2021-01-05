@@ -6,7 +6,7 @@
 @Introduce   : 自定义404处理
 """
 from abc import ABC
-from Config.log import errlogger
+from loguru import logger
 import tornado.web
 
 
@@ -20,17 +20,15 @@ class PageNotFoundHandler(tornado.web.RequestHandler, ABC):
         pass
         :return:
         """
-        errlogger.debug("Remote_IP: %s" % self.request.remote_ip)
-        errlogger.debug("Method: %s" % self.request.method)
-        errlogger.error("404 Not Found")
         self.render("404.html")
+        logger.warning("%s,%s,%s" % (self.request.method, self.request.remote_ip, self.request.uri))
+        logger.warning(tornado.web.HTTPError(404))
 
     def post(self):
         """
         pass
         :return:
         """
-        errlogger.debug("Remote_IP: %s" % self.request.remote_ip)
-        errlogger.debug("Method: %s" % self.request.method)
-        errlogger.error("404 Not Found")
         self.render("404.html")
+        logger.warning("%s,%s,%s" % (self.request.method, self.request.remote_ip, self.request.uri))
+        logger.warning(tornado.web.HTTPError(404))

@@ -6,7 +6,7 @@
 @Introduce   : 根路由对应的执行逻辑-模版
 """
 from abc import ABC
-from Config.log import logger
+from loguru import logger
 import tornado.web
 
 
@@ -22,16 +22,13 @@ class MainHandler(tornado.web.RequestHandler, ABC):
         处理get请求
         :return:
         """
-        logger.debug("Remote_IP: %s" % self.request.remote_ip)
-        logger.debug("Method: %s" % self.request.method)
         self.render("index.html")
+        logger.success("render index.html success")
 
     def post(self):
         """
         处理post请求
         :return:
         """
-        logger.debug("Remote_IP: %s" % self.request.remote_ip)
-        logger.debug("Method: %s" % self.request.method)
-
         self.write("Hello World")
+        logger.success("write Hello World success")
