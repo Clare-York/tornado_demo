@@ -21,6 +21,6 @@
 
     1. clone 此仓库到本地
     2. pip3 install -r requirements.txt
-    3. 重命名Config/settings_template.py为Config/settings.py,并填写需要的配置
+    3. 重命名Config/settings_example.py为Config/settings.py,并填写需要的配置
     4. python3 server.py
     5. 注意 windows下需修改server.py中的内容，具体请看server.py中的注释
