@@ -10,7 +10,7 @@ import tornado.httpserver
 import tornado.options
 import sys
 from Core.Applications import application
-from Config.settings import HOST, PORT
+from Config.settings import HOST, PORT, DEBUG
 from Core.LogCore import Log
 from loguru import logger
 
@@ -26,11 +26,12 @@ if __name__ == "__main__":
 
     http_server = tornado.httpserver.HTTPServer(application)  # 根据application的设置，生成一个http_server
 
-    # http_server.listen(tornado.options.options.port, address=HOST)  # 运行在address上，监听options.port端口
+    if DEBUG:
+        http_server.listen(tornado.options.options.port, address=HOST)  # 运行在address上，监听options.port端口
+    else:
+        http_server.bind(tornado.options.options.port, address=HOST)  # 多进程启动http_server，windows下不可用
 
-    http_server.bind(tornado.options.options.port, address=HOST)  # 多进程启动http_server，windows下不可用
-
-    http_server.start()  # 默认num_processes=1，当值<=0或None则自动根据cpu核芯数创建同等数目的子进程,>0则创建指定的子进程
+        http_server.start(num_processes=-1)  # 默认为1，当值<=0则自动根据cpu核芯数创建同等数目的子进程,>0则创建指定的子进程
 
     lib = sys.path[0] + '\t' + HOST + '\t' + str(tornado.options.options.port)  # 为了打印现在server是来自哪个文件，以及在监听哪个端口
 
