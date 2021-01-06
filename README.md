@@ -5,8 +5,6 @@
 
 项目结构参考了Python框架Django和PHP框架Hyperf
 
-开发工具：Microsoft Visual Studio Code
-
 环境：python3.7
 
 服务器：debian10或其他linux
