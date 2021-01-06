@@ -23,7 +23,7 @@ class TestHandler(tornado.web.RequestHandler, ABC):
     def __init__(self, *args, **kwargs):
         super(TestHandler, self).__init__(*args, **kwargs)
         self.redis = RedisDB().redis
-        self.db = Database().db
+        self.db = User.session
 
     def get(self):
         """
@@ -209,7 +209,8 @@ class TestHandler(tornado.web.RequestHandler, ABC):
         sql = "SELECT VERSION()"
         redis_re = self.redis.get("name")
         mysql_re = self.db.execute(sql)
-        self.db.remove()
+        # self.db.remove()
+        result = User.query.filter(User.username == 'asd').all()
         self.write("redis: %s \t mysql: %s" % (redis_re, mysql_re))
 
     def delete(self):

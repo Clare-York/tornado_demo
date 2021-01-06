@@ -8,6 +8,7 @@
 from sqlalchemy import BigInteger, Column, DateTime, Integer, String
 from Models.BaseModel import Base
 from datetime import datetime
+from Core.MysqlDriver import Session
 
 
 class User(Base):
@@ -34,8 +35,11 @@ class User(Base):
         Text: 文本类型
         LONGTEXT: 长文本类型
     """
-    __tablename__ = 'users'
-    __table_args__ = {'comment': '???'}
+
+    __tablename__ = 'users'  # 表名
+    __table_args__ = {'comment': 'user_table'}  # 表注释
+    session = Session  # 创建事物
+    query = session.query_property()  # 创建query
 
     id = Column(BigInteger, primary_key=True, index=True)
     username = Column(String(256, 'utf8mb4_general_ci'), nullable=False)
@@ -58,4 +62,9 @@ if __name__ == '__main__':
     # 使用Base类在数据库内创建表格，只能新建，不能更新
     # 若已提前建好数据表，可使用以下命令将数据表实例为本文件
     # sqlacodegen --tables <table_name> "mysql://<user>:<passwd>@<host>:<port>/<db_name>"><Table_nameModel.py>
-    Base.metadata.create_all()
+    # Base.metadata.create_all()
+    result = User.query.filter(User.username == "asd").all()
+    # UserModel.query.within_group()
+    print(result)
+    sql = "SELECT VERSION()"
+    print(User.session.execute(sql))

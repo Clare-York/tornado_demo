@@ -3,3 +3,4 @@ loguru~=0.5.3
 redis~=3.5.3
 SQLAlchemy~=1.3.22
 sqlacodegen~=2.3.0
+mysqlclient~=2.0.3
