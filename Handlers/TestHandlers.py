@@ -12,6 +12,7 @@ import json
 import base64
 from Core.RedisDriver import RedisDB
 from Core.MysqlDriver import Database
+from Models.TestModel import User
 
 
 class TestHandler(tornado.web.RequestHandler, ABC):
@@ -22,7 +23,7 @@ class TestHandler(tornado.web.RequestHandler, ABC):
     def __init__(self, *args, **kwargs):
         super(TestHandler, self).__init__(*args, **kwargs)
         self.redis = RedisDB().redis
-        self.connect, self.cursor = Database().db
+        self.db = Database().db
 
     def get(self):
         """
@@ -207,8 +208,8 @@ class TestHandler(tornado.web.RequestHandler, ABC):
         """
         sql = "SELECT VERSION()"
         redis_re = self.redis.get("name")
-        self.cursor.execute(sql)
-        mysql_re = self.cursor.fetchone()
+        mysql_re = self.db.execute(sql)
+        self.db.remove()
         self.write("redis: %s \t mysql: %s" % (redis_re, mysql_re))
 
     def delete(self):
