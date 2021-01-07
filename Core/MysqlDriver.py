@@ -19,7 +19,7 @@ class Database:
 
     def __init__(self):
         self._db_config = MYSQL_CONFIG
-        self._db_url = "mysql+mysqldb://{user}:{password}@{host}:{port}/{db}?charset=utf8"
+        self._db_url = "mysql+{driver}://{user}:{password}@{host}:{port}/{db}?charset=utf8"
         self._create_pool()
         self._get_connect()
 
