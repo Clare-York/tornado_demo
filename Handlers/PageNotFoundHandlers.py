@@ -23,6 +23,7 @@ class PageNotFoundHandler(tornado.web.RequestHandler, ABC):
         self.render("404.html")
         logger.warning("%s,%s,%s" % (self.request.method, self.request.remote_ip, self.request.uri))
         logger.warning(tornado.web.HTTPError(404))
+        self.set_status(404)
 
     def post(self):
         """
@@ -32,3 +33,4 @@ class PageNotFoundHandler(tornado.web.RequestHandler, ABC):
         self.render("404.html")
         logger.warning("%s,%s,%s" % (self.request.method, self.request.remote_ip, self.request.uri))
         logger.warning(tornado.web.HTTPError(404))
+        self.set_status(404)

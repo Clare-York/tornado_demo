@@ -8,10 +8,9 @@
 from abc import ABC
 from loguru import logger
 import tornado.web
-import json
-import base64
+from datetime import datetime
 from Core.RedisDriver import RedisDB
-from Core.MysqlDriver import Database
+from Core.MysqlDriver import Session
 from Models.TestModel import User
 
 
@@ -23,202 +22,82 @@ class TestHandler(tornado.web.RequestHandler, ABC):
     def __init__(self, *args, **kwargs):
         super(TestHandler, self).__init__(*args, **kwargs)
         self.redis = RedisDB().redis
-        self.db = User.session
+        self.db = Session
 
     def get(self):
         """
-        处理get请求
+        处理get请求，查
         :return:
         """
         logger.debug("Remote_IP: %s,Method: %s" % (self.request.remote_ip, self.request.method))
-
-        self.write("Headers: %s" % self.request.headers)  # 请求头
-
-        self.write("<p></p>")
-
-        self.write("Method: %s" % self.request.method)  # 请求方式
-
-        self.write("<p></p>")
-
-        self.write("Query: %s" % self.request.query)  # get请求?后拼接的内容
-
-        self.write("<p></p>")
-
-        self.write("Query_Arguments: %s" % self.request.query_arguments)  # get请求的参数
-
-        self.write("<p></p>")
-
-        self.write("Body: %s" % self.request.body)  # 请求体
-
-        self.write("<p></p>")
-
-        self.write("Body_Arguments: %s" % self.request.body_arguments)  # 请求体内的参数
-
-        self.write("<p></p>")
-
-        self.write("Arguments: %s" % self.request.arguments)  # 请求参数
-
-        self.write("<p></p>")
-
-        self.write("Files: %s" % self.request.files)  # 上传的文件
-
-        self.write("<p></p>")
-
-        self.write("Remote_IP: %s" % self.request.remote_ip)  # 来自IP
-
-        self.write("<p></p>")
-
-        self.write("Host: %s" % self.request.host)  # 服务运行地址
-
-        self.write("<p></p>")
-
-        self.write("Host_Name: %s" % self.request.host_name)  # 运行IP
-
-        self.write("<p></p>")
-
-        self.write("Uri: %s" % self.request.uri)  # 请求的路由+参数
-
-        self.write("<p></p>")
-
-        self.write("Path: %s" % self.request.path)  # 请求的具体路由
-
-        self.write("<p></p>")
-
-        self.write("Cookies: %s" % self.request.cookies)  # 未知
-
-        self.write("<p></p>")
-
-        self.write("Version: %s" % self.request.version)  # http协议版本
-
-        self.write("<p></p>")
-
-        self.write("Protocol: %s" % self.request.protocol)  # http/https协议
+        sql = "SELECT VERSION()"
+        redis_re = self.redis.get("name")
+        result = User.query.filter(User.username == 'asd').all()
+        resul2 = self.db.query(User.id).filter(User.username == 'asd').first()
+        result3 = self.db.execute(sql).fetchone()  # 原生SQL
+        self.db.remove()  # 释放连接
+        self.write("redis: %s " % redis_re)
+        self.write("query:%s,\n query():%s,\n execute()%s" % (result, resul2, result3))
 
     def post(self):
         """
-        处理post请求
+        处理post请求，增
         :return:
         """
         logger.debug("Remote_IP: %s,Method: %s" % (self.request.remote_ip, self.request.method))
-
-        # 获取参数
+        name = self.request.body_arguments.get('name')[0]
+        tel = self.request.body_arguments.get('phone')[0]
+        user = User(username=str(name), telphone=str(tel), created_at=datetime.now())
         try:
-            parameter_a = self.get_argument("a")
-        except tornado.web.MissingArgumentError:
-            logger.debug("Remote_IP: %s" % self.request.remote_ip)
-            logger.debug("Method: %s" % self.request.method)
-            logger.error("获取参数'a'失败！")
-            # raise tornado.web.HTTPError(400)
-        else:
-            print("a:", parameter_a)
-
-        # 获取上传的文件-单文件
-        try:
-            file_data = self.request.files["file"][0]
-            filename = file_data["filename"]  # 文件名
-            filebody = file_data["body"]  # 文件主体
-            fileext = file_data["content_type"]  # 文件类型
-        except KeyError:
-            logger.debug("Remote_IP: %s" % self.request.remote_ip)
-            logger.debug("Method: %s" % self.request.method)
-            logger.error("获取参数失败")
-            # raise tornado.web.HTTPError(401)
-            # print("获取参数失败")
+            self.db.add(user)
+            self.db.commit()
         except Exception as e:
-            logger.debug("Remote_IP: %s" % self.request.remote_ip)
-            logger.debug("Method: %s" % self.request.method)
             logger.error(e)
-            # raise tornado.web.HTTPError(400)
-            # print(e)
+            self.db.rollback()
+            self.set_status(500)
         else:
-            if fileext.split('/')[0] == "image":  # 以图片为例
-                f = open(filename, "wb")
-                f.write(filebody)
-                f.close()
-
-        # 获取上传的文件-多文件
-        try:
-            file_ext = None
-            file_name = None
-            file_body = None
-            file_data = self.request.files["file"][0]
-            for file in file_data:
-                file_name = file["filename"]
-                file_body = file["body"]
-                file_ext = file["content_type"]
-        except KeyError:
-            logger.debug("Remote_IP: %s" % self.request.remote_ip)
-            logger.debug("Method: %s" % self.request.method)
-            logger.error("获取参数失败")
-            # raise tornado.web.HTTPError(401)
-        except Exception as e:
-            logger.debug("Remote_IP: %s" % self.request.remote_ip)
-            logger.debug("Method: %s" % self.request.method)
-            logger.error(e)
-            # raise tornado.web.HTTPError(400)
-        else:
-            if file_ext.split('/')[0] == "image":  # 以图片为例
-                file = open(file_name, 'wb')
-                file.write(file_body)
-                file.close()
-
-        # 获取上传的图片-base64
-        try:
-            image_data = base64.b64decode(self.get_argument("image"))
-        except KeyError:
-            # raise tornado.web.HTTPError(401)
-            logger.debug("Remote_IP: %s" % self.request.remote_ip)
-            logger.debug("Method: %s" % self.request.method)
-            logger.error("获取参数失败")
-        except Exception as e:
-            logger.debug("Remote_IP: %s" % self.request.remote_ip)
-            logger.debug("Method: %s" % self.request.method)
-            logger.error(e)
-            # raise tornado.web.HTTPError(400)
-        else:
-            img = open("test.jpg", 'wb')
-            img.write(image_data)
-            img.close()
-
-        # 获取json数据
-        try:
-            data = json.loads(self.request.body)
-            parameter_a = data["a"]
-        except json.decoder.JSONDecodeError:  # 不是json数据
-            logger.debug("Remote_IP: %s" % self.request.remote_ip)
-            logger.debug("Method: %s" % self.request.method)
-            logger.error("不是Json数据")
-            # raise tornado.web.HTTPError(403)
-        except KeyError:  # 没有找到key
-            logger.debug("Remote_IP: %s" % self.request.remote_ip)
-            logger.debug("Method: %s" % self.request.method)
-            logger.error("获取参数失败")
-            # raise tornado.web.HTTPError(405)
-        except Exception as e:
-            logger.debug("Remote_IP: %s" % self.request.remote_ip)
-            logger.debug("Method: %s" % self.request.method)
-            logger.error(e)
-        else:
-            print("a:", parameter_a)
+            self.db.remove()
+            self.write("新增成功")
 
     def put(self):
         """
-        处理put请求
+        处理put请求,改
         :return:
         """
-        sql = "SELECT VERSION()"
-        redis_re = self.redis.get("name")
-        mysql_re = self.db.execute(sql)
-        # self.db.remove()
-        result = User.query.filter(User.username == 'asd').all()
-        self.write("redis: %s \t mysql: %s" % (redis_re, mysql_re))
+        logger.debug("Remote_IP: %s,Method: %s" % (self.request.remote_ip, self.request.method))
+        name = self.request.body_arguments.get('name')[0]
+        user_id = self.request.body_arguments.get('id')[0]
+        try:
+            self.db.update(User.username == str(name)).filter_by(User.id == user_id).first()
+            self.db.commit()
+        except Exception as e:
+            logger.error(e)
+            self.db.rollback()
+            self.set_status(500)
+        else:
+            self.db.remove()  # 释放连接
+            self.write("修改成功")
 
     def delete(self):
         """
-        处理delete请求
+        处理delete请求，删
         :return:
         """
-        pass
+        logger.debug("Remote_IP: %s,Method: %s" % (self.request.remote_ip, self.request.method))
+        name = self.request.body_arguments.get('name')[0]
+        user_id = self.request.body_arguments.get('id')[0]
+        try:
+            self.db.update(User.status == 0, User.deleted_at == datetime.now()).filter_by(
+                User.id == user_id).first()  # 逻辑删除
+            User.query.filter_by(User.id == user_id).delete()
+            self.db.commit()
+        except Exception as e:
+            logger.error(e)
+            self.db.rollback()
+            self.set_status(500)
+        else:
+            self.db.remove()  # 释放连接
+            self.write("修改成功")
 
     def head(self):
         """
