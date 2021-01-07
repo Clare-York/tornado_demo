@@ -16,6 +16,7 @@ PORT = 8080
 
 # MySQ数据库配置
 MYSQL_CONFIG = {
+    "driver": "mysqldb",  # mysqlclient ,若用的是pymysql则填pymysql
     "host": "127.0.0.1",  # 地址,默认 127.0.0.1
     "port": 3306,  # 端口,默认 3306
     "db": "",  # 数据库名
