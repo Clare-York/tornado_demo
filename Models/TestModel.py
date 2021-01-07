@@ -38,8 +38,7 @@ class User(Base):
 
     __tablename__ = 'users'  # 表名
     __table_args__ = {'comment': 'user_table'}  # 表注释
-    session = Session  # 创建事物
-    query = session.query_property()  # 创建query
+    query = Session.query_property()  # 创建query
 
     id = Column(BigInteger, primary_key=True, index=True)
     username = Column(String(256, 'utf8mb4_general_ci'), nullable=False)
@@ -67,4 +66,4 @@ if __name__ == '__main__':
     # UserModel.query.within_group()
     print(result)
     sql = "SELECT VERSION()"
-    print(User.session.execute(sql))
+    print(Session.execute(sql).fetchone())
