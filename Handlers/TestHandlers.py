@@ -9,11 +9,11 @@ from abc import ABC
 from loguru import logger
 import tornado.web
 from datetime import datetime
-from Handlers.BaseHandlers import BaseHandlers
+from Handlers.BaseHandlers import BaseHandler
 from Models.TestModel import User
 
 
-class TestHandler(tornado.web.RequestHandler, BaseHandlers, ABC):
+class TestHandler(tornado.web.RequestHandler, BaseHandler, ABC):
     """
     测试用
     """
@@ -42,7 +42,7 @@ class TestHandler(tornado.web.RequestHandler, BaseHandlers, ABC):
         logger.debug("Remote_IP: %s,Method: %s" % (self.request.remote_ip, self.request.method))
         name = self.get_body_argument('name')
         tel = self.get_body_argument('phone')
-        user = User(username=str(name), telphone=str(tel), created_at=datetime.now())
+        user = User(username=str(name), telphone=str(tel))
         try:
             self.db.add(user)
             self.db.commit()
@@ -83,8 +83,8 @@ class TestHandler(tornado.web.RequestHandler, BaseHandlers, ABC):
         logger.debug("Remote_IP: %s,Method: %s" % (self.request.remote_ip, self.request.method))
         user_id = self.request.body_arguments.get('id')[0]
         try:
-            # User.query.filter(User.id == user_id).update({User.status: 0, User.deleted_at: datetime.now()}) # 逻辑删除
-            User.query.filter(User.id == user_id).delete()  # 实际删除
+            User.query.filter(User.id == user_id).update({User.status: 0, User.deleted_at: datetime.now()})  # 逻辑删除
+            # User.query.filter(User.id == user_id).delete()  # 实际删除
             self.db.commit()
         except Exception as e:
             logger.error(e)

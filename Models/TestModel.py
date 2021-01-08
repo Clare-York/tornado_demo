@@ -5,12 +5,11 @@
 @File        : TestModel.py
 @Introduce   : 数据表users的实例化对象
 """
-from sqlalchemy import BigInteger, Column, DateTime, Integer, String
-from Models.BaseModel import Base, db
-from datetime import datetime
+from sqlalchemy import Column, Integer, String
+from Models.BaseModel import Base, BaseModel
 
 
-class User(Base):
+class User(Base, BaseModel):
     """
     数据表users的实例化对象
     Column的常用参数：
@@ -37,15 +36,10 @@ class User(Base):
 
     __tablename__ = 'users'  # 表名
     __table_args__ = {'comment': 'user_table'}  # 表注释
-    query = db.query_property()  # 创建query
 
-    id = Column(BigInteger, primary_key=True, index=True)
     username = Column(String(256, 'utf8mb4_general_ci'), nullable=False)
     telphone = Column(String(256, 'utf8mb4_general_ci'), nullable=False)
     status = Column(Integer, nullable=False, default=1)
-    created_at = Column(DateTime)
-    updated_at = Column(DateTime, default=datetime.now())
-    deleted_at = Column(DateTime)
 
     def __repr__(self):
         """
