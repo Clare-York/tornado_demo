@@ -48,6 +48,3 @@ class Database:
         """
         session_factory = sessionmaker(bind=self.engine)  # 创建Session工厂
         self.session = scoped_session(session_factory)  # 通过 registry 模式 协助管理session (多线程安全)
-
-
-Session = Database().session

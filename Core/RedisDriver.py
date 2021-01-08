@@ -33,7 +33,7 @@ class RedisDB:
         except Exception as ex:
             logger.error("创建连接池失败!错误原因：%s" % ex)
         else:
-            logger.success("创建连接池成功")
+            logger.success("创建Redis连接池成功")
 
     def _get_connect(self):
         """
@@ -45,16 +45,5 @@ class RedisDB:
         except Exception as err:
             logger.error("无法接入连接池，请检查Redis配置,错误原因：%s" % err)
         else:
-            logger.success("接入连接池成功")
+            logger.success("接入Redis连接池成功")
             return redis_cur
-
-# test.
-# Redis = RedisDB().redis
-# try:
-#     Redis.set("age", 18)
-#     re = Redis.get("age")
-#     print(re)
-# except redis.exceptions.ConnectionError:
-#     print("连接失败")
-# except Exception as e:
-#     print(e)

@@ -9,20 +9,14 @@ from abc import ABC
 from loguru import logger
 import tornado.web
 from datetime import datetime
-from Core.RedisDriver import RedisDB
-from Core.MysqlDriver import Session
+from Handlers.BaseHandlers import BaseHandlers
 from Models.TestModel import User
 
 
-class TestHandler(tornado.web.RequestHandler, ABC):
+class TestHandler(tornado.web.RequestHandler, BaseHandlers, ABC):
     """
     测试用
     """
-
-    def __init__(self, *args, **kwargs):
-        super(TestHandler, self).__init__(*args, **kwargs)
-        self.redis = RedisDB().redis
-        self.db = Session
 
     def get(self):
         """
@@ -31,12 +25,13 @@ class TestHandler(tornado.web.RequestHandler, ABC):
         """
         logger.debug("Remote_IP: %s,Method: %s" % (self.request.remote_ip, self.request.method))
         sql = "SELECT VERSION()"
+        name = self.get_query_argument("name")
         redis_re = self.redis.get("name")
-        result = User.query.filter(User.username == 'asd').all()
-        resul2 = self.db.query(User.id).filter(User.username == 'asd').first()
-        result3 = self.db.execute(sql).fetchone()  # 原生SQL
+        result = User.query.filter(User.username == name).all()[0]
+        resul2 = self.db.query(User.id).filter(User.username == name).first()[0]
+        result3 = self.db.execute(sql).fetchone()[0]  # 原生SQL
         self.db.remove()  # 释放连接
-        self.write("redis: %s " % redis_re)
+        self.write("redis: %s \n" % redis_re)
         self.write("query:%s,\n query():%s,\n execute()%s" % (result, resul2, result3))
 
     def post(self):
@@ -45,8 +40,8 @@ class TestHandler(tornado.web.RequestHandler, ABC):
         :return:
         """
         logger.debug("Remote_IP: %s,Method: %s" % (self.request.remote_ip, self.request.method))
-        name = self.request.body_arguments.get('name')[0]
-        tel = self.request.body_arguments.get('phone')[0]
+        name = self.get_body_argument('name')
+        tel = self.get_body_argument('phone')
         user = User(username=str(name), telphone=str(tel), created_at=datetime.now())
         try:
             self.db.add(user)
@@ -57,7 +52,8 @@ class TestHandler(tornado.web.RequestHandler, ABC):
             self.set_status(500)
         else:
             self.db.remove()
-            self.write("新增成功")
+            result = User.query.filter(User.username == name).all()[0]
+            self.write("新增成功 \n %s" % result)
 
     def put(self):
         """
@@ -65,18 +61,19 @@ class TestHandler(tornado.web.RequestHandler, ABC):
         :return:
         """
         logger.debug("Remote_IP: %s,Method: %s" % (self.request.remote_ip, self.request.method))
-        name = self.request.body_arguments.get('name')[0]
-        user_id = self.request.body_arguments.get('id')[0]
+        name = self.get_body_argument('name')
+        user_id = self.get_body_argument('id')
         try:
-            self.db.update(User.username == str(name)).filter_by(User.id == user_id).first()
+            User.query.filter(User.id == user_id).update({User.username: str(name), User.updated_at: datetime.now()})
             self.db.commit()
         except Exception as e:
             logger.error(e)
             self.db.rollback()
             self.set_status(500)
         else:
+            result = User.query.filter(User.id == user_id).all()[0]
             self.db.remove()  # 释放连接
-            self.write("修改成功")
+            self.write("修改成功\n %s" % result)
 
     def delete(self):
         """
@@ -84,20 +81,19 @@ class TestHandler(tornado.web.RequestHandler, ABC):
         :return:
         """
         logger.debug("Remote_IP: %s,Method: %s" % (self.request.remote_ip, self.request.method))
-        name = self.request.body_arguments.get('name')[0]
         user_id = self.request.body_arguments.get('id')[0]
         try:
-            self.db.update(User.status == 0, User.deleted_at == datetime.now()).filter_by(
-                User.id == user_id).first()  # 逻辑删除
-            User.query.filter_by(User.id == user_id).delete()
+            # User.query.filter(User.id == user_id).update({User.status: 0, User.deleted_at: datetime.now()}) # 逻辑删除
+            User.query.filter(User.id == user_id).delete()  # 实际删除
             self.db.commit()
         except Exception as e:
             logger.error(e)
             self.db.rollback()
             self.set_status(500)
         else:
+            result = User.query.filter(User.status == 1).all()
             self.db.remove()  # 释放连接
-            self.write("修改成功")
+            self.write("删除成功\n %s" % result)
 
     def head(self):
         """

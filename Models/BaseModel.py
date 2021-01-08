@@ -8,5 +8,5 @@
 from Core.MysqlDriver import Database
 from sqlalchemy.ext.declarative import declarative_base
 
-engine = Database().engine
-Base = declarative_base(engine)
+Base = declarative_base(Database().engine)
+db = Database().session
