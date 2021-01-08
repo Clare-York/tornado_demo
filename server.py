@@ -8,9 +8,10 @@
 import tornado.ioloop
 import sys
 from Config.settings import HOST, PORT, DEBUG
-from loguru import logger
+from Core.LogCore import log
 from tornado import httpserver
 from tornado.options import options, define, parse_command_line
+from Core.Applications import application
 
 # 定义一个变量，options.port = 8080。
 # 这样的好处是，如果之后需要在其他地方使用这个变量，就可以直接用options.port就可以获得
@@ -20,9 +21,7 @@ define("host", default=HOST, help="run on this host", type=str)
 
 if __name__ == "__main__":
     lib = sys.path[0] + '\t' + options.host + '\t' + str(options.port)  # 为了打印现在server是来自哪个文件，以及在监听哪个端口
-    logger.debug("Tornado server is running at %s" % lib)
-
-    from Core.Applications import application
+    log.debug("Tornado server is running at %s" % lib)
 
     parse_command_line()  # 加入此行可在运行时利用命令行--port xxx --host 'xxx.x.x.x'指定运行地址和端口
 

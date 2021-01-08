@@ -5,10 +5,10 @@
 @File        : Applications.py
 @Introduce   : 一些基础设定
 """
-from Config.routes import urls
 import tornado.web
 import os
 from Config.settings import *
+from Config.routes import urls
 
 settings = {
     "template_path": os.path.join(os.getcwd(), "Templates"),

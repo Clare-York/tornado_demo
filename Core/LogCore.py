@@ -28,3 +28,7 @@ class Log:
         logger.add(os.path.join(self._logging_path, self._log_name), rotation="00:00", retention="30 days",
                    level="DEBUG",
                    encoding='utf-8')  # 每天0点整分割一次日志，最长保留30天
+        return logger
+
+
+log = Log().set_logger_config_and_start()
