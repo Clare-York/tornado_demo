@@ -7,6 +7,7 @@
 """
 import redis
 from Config.settings import REDIS_CONFIG
+from Middleware.BaseError import *
 from loguru import logger
 
 
@@ -27,7 +28,7 @@ class RedisDB:
         """
         if not self.db_config:
             logger.error("没有配置Redis信息")
-            raise NameError
+            raise RedisConfigError
         try:
             self.pool = redis.ConnectionPool(decode_responses=True, **REDIS_CONFIG)
         except Exception as ex:

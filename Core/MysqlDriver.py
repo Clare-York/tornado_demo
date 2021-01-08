@@ -7,6 +7,7 @@
 """
 import MySQLdb
 from Config.settings import MYSQL_CONFIG
+from Middleware.BaseError import *
 from loguru import logger
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
@@ -30,7 +31,7 @@ class Database:
         """
         if not self._db_config:
             logger.error("没有配置MySQL数据库信息")
-            raise NameError
+            raise MysqlConfigError
         try:
             # ORM自带连接池
             self.engine = create_engine(self._db_url.format(**self._db_config))  # 创建连接池
@@ -46,6 +47,7 @@ class Database:
         与mysql建立连接
         :return:conn,cur
         """
+
         session_factory = sessionmaker(bind=self.engine)  # 创建Session工厂
         return scoped_session(session_factory)  # 通过 registry 模式 协助管理session (多线程安全)
 
