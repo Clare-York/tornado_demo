@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 """
-@Time        : 2021/1/8 9:48
+@Time        : 2021/1/8 11:02
 @Author      : chengy_work@foxmail.com
 @File        : BaseHandlers.py
 @Introduce   :
 """
-from Core.MysqlDriver import Database
+from Models.BaseModel import database
 from Core.RedisDriver import RedisDB
 
 
-class BaseHandlers(object):
+class BaseHandler(object):
     """
-    创建连接池
+    定义连接池
     """
 
     @property
@@ -20,7 +20,7 @@ class BaseHandlers(object):
         pass
         :return: session
         """
-        return Database().session
+        return database.session
 
     @property
     def redis(self):

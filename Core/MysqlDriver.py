@@ -21,7 +21,7 @@ class Database:
         self._db_config = MYSQL_CONFIG
         self._db_url = "mysql+{driver}://{user}:{password}@{host}:{port}/{db}?charset=utf8"
         self._create_pool()
-        self._get_connect()
+        self.session = self._get_connect()
 
     def _create_pool(self):
         """
@@ -47,4 +47,7 @@ class Database:
         :return:conn,cur
         """
         session_factory = sessionmaker(bind=self.engine)  # 创建Session工厂
-        self.session = scoped_session(session_factory)  # 通过 registry 模式 协助管理session (多线程安全)
+        return scoped_session(session_factory)  # 通过 registry 模式 协助管理session (多线程安全)
+
+
+database = Database()
