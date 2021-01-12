@@ -7,7 +7,7 @@
 """
 from abc import ABC
 from tornado.websocket import WebSocketHandler
-from Core.PushCore import PushCore
+from Core.ConnectCore import PushCore
 
 
 class ConnectHandler(WebSocketHandler, ABC):

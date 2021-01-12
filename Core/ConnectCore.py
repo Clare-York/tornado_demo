@@ -2,7 +2,7 @@
 """
 @Time        : 2021/1/8 16:16
 @Author      : chengy_work@foxmail.com
-@File        : PushCore.py
+@File        : ConnectCore.py
 @Introduce   : 用于向client端推送消息
 """
 from uuid import uuid4

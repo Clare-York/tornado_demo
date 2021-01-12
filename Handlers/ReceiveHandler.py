@@ -7,7 +7,7 @@
 """
 from abc import ABC
 from tornado.web import RequestHandler
-from Core.PushCore import PushCore
+from Core.ConnectCore import PushCore
 from loguru import logger
 
 
